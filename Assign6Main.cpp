@@ -79,12 +79,13 @@ Assign6Frame::Assign6Frame(wxWindow* parent,wxWindowID id)
     wxMenu* Menu2;
 
     Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    SetClientSize(wxSize(350,350));
     Panel1 = new wxPanel(this, ID_PANEL1, wxPoint(96,80), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     Button1 = new wxButton(Panel1, ID_BUTTON1, _("Url"), wxPoint(32,40), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
     Button2 = new wxButton(Panel1, ID_BUTTON2, _("Word"), wxPoint(32,88), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
-    TextCtrl1 = new wxTextCtrl(Panel1, ID_TEXTCTRL1, _("Text"), wxPoint(168,40), wxSize(136,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL1"));
-    TextCtrl2 = new wxTextCtrl(Panel1, ID_TEXTCTRL2, _("Text"), wxPoint(168,88), wxSize(136,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL2"));
-    TextCtrl3 = new wxTextCtrl(Panel1, ID_TEXTCTRL3, _("Text"), wxPoint(224,152), wxSize(80,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL3"));
+    TextCtrl1 = new wxTextCtrl(Panel1, ID_TEXTCTRL1, _("Url file"), wxPoint(168,40), wxSize(136,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL1"));
+    TextCtrl2 = new wxTextCtrl(Panel1, ID_TEXTCTRL2, _("Word file"), wxPoint(168,88), wxSize(136,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL2"));
+    TextCtrl3 = new wxTextCtrl(Panel1, ID_TEXTCTRL3, wxEmptyString, wxPoint(224,152), wxSize(80,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL3"));
     StaticText1 = new wxStaticText(Panel1, ID_STATICTEXT1, _("Hits"), wxPoint(176,160), wxSize(80,17), 0, _T("ID_STATICTEXT1"));
     Button3 = new wxButton(Panel1, ID_BUTTON3, _("Start"), wxPoint(40,152), wxSize(64,27), 0, wxDefaultValidator, _T("ID_BUTTON3"));
     Gauge1 = new wxGauge(Panel1, ID_GAUGE1, 100, wxPoint(128,200), wxSize(176,28), 0, wxDefaultValidator, _T("ID_GAUGE1"));
@@ -110,6 +111,7 @@ Assign6Frame::Assign6Frame(wxWindow* parent,wxWindowID id)
     Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&Assign6Frame::OnButton2Click);
     Connect(ID_TEXTCTRL3,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&Assign6Frame::OnTextCtrl3Text);
     Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&Assign6Frame::OnButton3Click);
+    Panel1->Connect(wxEVT_PAINT,(wxObjectEventFunction)&Assign6Frame::OnPanel1Paint1,0,this);
     Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&Assign6Frame::OnQuit);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&Assign6Frame::OnAbout);
     //*)
@@ -189,6 +191,7 @@ void Assign6Frame::OnButton2Click(wxCommandEvent& event)
 /*Start the spider*/
 void Assign6Frame::OnButton3Click(wxCommandEvent& event)
 {
+    //if()
     int range = totUrl.size();
     Gauge1->SetRange(range);    //gauge based on # of urls completed
     int hits = 0;
@@ -239,5 +242,9 @@ void Assign6Frame::OnButton3Click(wxCommandEvent& event)
 
 
 void Assign6Frame::OnTextCtrl3Text(wxCommandEvent& event)
+{
+}
+
+void Assign6Frame::OnPanel1Paint1(wxPaintEvent& event)
 {
 }

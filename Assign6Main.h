@@ -45,6 +45,7 @@ class Assign6Frame: public wxFrame
         void OnPanel1Paint(wxPaintEvent& event);
         void OnButton3Click(wxCommandEvent& event);
         void OnTextCtrl3Text(wxCommandEvent& event);
+        void OnPanel1Paint1(wxPaintEvent& event);
         //*)
 
         //(*Identifiers(Assign6Frame)
