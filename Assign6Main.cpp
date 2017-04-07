@@ -83,8 +83,8 @@ Assign6Frame::Assign6Frame(wxWindow* parent,wxWindowID id)
     Panel1 = new wxPanel(this, ID_PANEL1, wxPoint(96,80), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     Button1 = new wxButton(Panel1, ID_BUTTON1, _("Url"), wxPoint(32,40), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
     Button2 = new wxButton(Panel1, ID_BUTTON2, _("Word"), wxPoint(32,88), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
-    TextCtrl1 = new wxTextCtrl(Panel1, ID_TEXTCTRL1, _("Url file"), wxPoint(168,40), wxSize(136,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL1"));
-    TextCtrl2 = new wxTextCtrl(Panel1, ID_TEXTCTRL2, _("Word file"), wxPoint(168,88), wxSize(136,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL2"));
+    TextCtrl1 = new wxTextCtrl(Panel1, ID_TEXTCTRL1, wxEmptyString, wxPoint(168,40), wxSize(136,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL1"));
+    TextCtrl2 = new wxTextCtrl(Panel1, ID_TEXTCTRL2, wxEmptyString, wxPoint(168,88), wxSize(136,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL2"));
     TextCtrl3 = new wxTextCtrl(Panel1, ID_TEXTCTRL3, wxEmptyString, wxPoint(224,152), wxSize(80,27), 0, wxDefaultValidator, _T("ID_TEXTCTRL3"));
     StaticText1 = new wxStaticText(Panel1, ID_STATICTEXT1, _("Hits"), wxPoint(176,160), wxSize(80,17), 0, _T("ID_STATICTEXT1"));
     Button3 = new wxButton(Panel1, ID_BUTTON3, _("Start"), wxPoint(40,152), wxSize(64,27), 0, wxDefaultValidator, _T("ID_BUTTON3"));
@@ -191,53 +191,57 @@ void Assign6Frame::OnButton2Click(wxCommandEvent& event)
 /*Start the spider*/
 void Assign6Frame::OnButton3Click(wxCommandEvent& event)
 {
-    //if()
-    int range = totUrl.size();
-    Gauge1->SetRange(range);    //gauge based on # of urls completed
-    int hits = 0;
-    int progress = 0;
-
-    int j;
-    for(j = 0; j < totUrl.size(); j++)
+    if(TextCtrl1->IsEmpty())
     {
-        wxURL url(totUrl[j]);   //fetch url from url file
-
-        /*Check the url and place it's source code in a buffer*/
-        if (url.GetError() == wxURL_NOERR)
-        {
-            wxInputStream *in_stream;
-            in_stream = url.GetInputStream();
-            unsigned char buffer[BUFFSIZE];
-            do {
-                in_stream->Read(buffer, BUFFSIZE);
-            } while (!in_stream->Eof());
-
-
-            /*Place the buffer as a string and tokenize it by space */
-            wxString s = buffer;
-            wxStringTokenizer tokenizer(s, " ");
-
-            int i;
-
-            /*Check to see if tokens match the words. Make all values upper case becuase isSameAs is case sensitive*/
-            while(tokenizer.HasMoreTokens())
-            {
-                wxString token = tokenizer.GetNextToken();
-                for(i = 0; i < totWords.size(); i++)
-                {
-                    if(token.MakeUpper().IsSameAs(totWords[i].MakeUpper()))
-                        hits++;
-                }
-            }
-
-        }
-
-        Gauge1->SetValue(j+1);  //increment the progress bar
+        wxMessageBox("Please load a url file.");
     }
-    /*Update the hits*/
-    TextCtrl3->SetValue(wxString::Format(wxT("%i"), hits));
+    else if(TextCtrl2->IsEmpty())
+    {
+        wxMessageBox("Please load a word file.");
+    }
+    else
+    {
+        int hits = 0;
+        int progress = 0;
+        int i, j;
 
+        int range = totUrl.size();
+        Gauge1->SetRange(range);    //gauge based on # of urls completed
 
+        for(j = 0; j < totUrl.size(); j++)
+        {
+            wxURL url(totUrl[j]);   //fetch url from url file
+
+            /*Check the url and place it's source code in a buffer*/
+            if (url.GetError() == wxURL_NOERR)
+            {
+                wxInputStream *in_stream;
+                in_stream = url.GetInputStream();
+                unsigned char buffer[BUFFSIZE];
+                do {
+                    in_stream->Read(buffer, BUFFSIZE);
+                } while (!in_stream->Eof());
+
+                /*Place the buffer as a string and tokenize it by space */
+                wxString s = buffer;
+                wxStringTokenizer tokenizer(s, " ");
+
+                /*Check to see if tokens match the words. Make all values upper case becuase isSameAs is case sensitive*/
+                while(tokenizer.HasMoreTokens())
+                {
+                    wxString token = tokenizer.GetNextToken();
+                    for(i = 0; i < totWords.size(); i++)
+                    {
+                        if(token.MakeUpper().IsSameAs(totWords[i].MakeUpper()))
+                            hits++;
+                        /*Update the hits*/
+                        TextCtrl3->SetValue(wxString::Format(wxT("%i"), hits));
+                    }
+                }
+                Gauge1->SetValue(j+1);  //increment the progress bar
+            }
+        }
+    }
 }
 
 
